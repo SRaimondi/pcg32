@@ -6,6 +6,22 @@ pub struct Pcg32 {
 }
 
 impl Pcg32 {
+    pub fn with_seed_and_sequence(initial_state: u64, sequence: u64) -> Self {
+        let mut g = Self {
+            state: initial_state,
+            stream: (sequence << 1) | 1,
+        };
+        g.next_u32();
+        g.state += initial_state;
+        g.next_u32();
+        g
+    }
+
+    /// Create generator with random seed
+    pub fn with_seed(initial_state: u64) -> Self {
+        Self::with_seed_and_sequence(initial_state, 1)
+    }
+
     /// Request next u32 from the generator.
     #[inline]
     pub fn next_u32(&mut self) -> u32 {
